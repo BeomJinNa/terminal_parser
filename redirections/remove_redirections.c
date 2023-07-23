@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   remove_redirections.c                              :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */ /*   remove_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 09:42:17 by bena              #+#    #+#             */
-/*   Updated: 2023/07/23 10:03:44 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/23 11:35:13 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-static unsigned int	get_remaining_string_length(char *str);
+static int	get_remaining_string_length(char *str);
+static void	take_remaining_string(char *remain, char *original);
 
 char	*remove_redirections(char *str)
 {
-	char			*output;
-	unsigned int	size;
+	char	*output;
+	int		size;
 
 	if (str == NULL)
 		return (NULL);
@@ -30,22 +30,51 @@ char	*remove_redirections(char *str)
 	return (output);
 }
 
-static unsigned int	get_remaining_string_length(char *str)
+static int	get_remaining_string_length(char *str)
 {
-	unsigned int	count;
-	int				on_remaining_character;
-	char			*ptr;
+	int	count;
+	int	on_redirection;
 
 	count = 0;
-	ptr = str;
-	on_remaining_character = 0;
-	while (*ptr)
+	on_redirection = 0;
+	while (*str)
 	{
-		if (on_remaining_character == 0 && (*ptr == '<' || *ptr == '>'))
-			on_remaining_character = 1;
-		if (on_remaining_character == 0)
+		if (on_redirection == 1 && *str == ' ')
+			on_redirection = 0;
+		if (on_redirection == 0 && (*str == '<' || *str == '>'))
+			on_redirection = 1;
+		while (on_redirection == 1 && (*str == '<' || *str == '>'))
+			str++;
+		while (*on_redirection == 1 && str == ' ')
+			str++;
+		if (on_redirection == 0)
 			count++;
-		ptr++;
+		str++;
 	}
 	return (count);
+}
+
+static void	take_remaining_string(char *remain, char *original)
+{
+	int		on_redirection;
+	char	*ptr_from;
+	char	*ptr_to;
+
+	ptr_from = original;
+	ptr_to = remain;
+	on_redirection = 0;
+	while (*ptr_from)
+	{
+		if (on_redirection == 1 && *ptr_from == ' ')
+			on_redirection = 0;
+		if (on_redirection == 0 && (*ptr_from == '<' || *ptr_from == '>'))
+			on_redirection = 1;
+		while (on_redirection == 1 && (*ptr_from == '<' || *ptr_from == '>'))
+			ptr_from++;
+		while (on_redirection == 1 && *ptr_from == ' ')
+			ptr_from++;
+		if (on_redirection == 0)
+			*ptr_to++ = *ptr_from;
+		ptr_from++;
+	}
 }
