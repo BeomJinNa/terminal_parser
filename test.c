@@ -11,16 +11,24 @@ int	main(void)
 	char	**ptr;
 
 	str = readline("command : ");
-	if (str == NULL)
-		return (0);
-	tokens = get_tokenized_array(str, '|');
-	ptr = tokens;
-	while (*ptr != NULL)
+	while (str != NULL)
 	{
-		printf("%s\n", *ptr);
-		free(*ptr);
-		ptr++;
+		add_history(str);
+		replace_white_spaces(str);
+		str = remove_redirections(str);
+		tokens = get_tokenized_array(str, '|');
+		if (tokens != NULL)
+		{
+			ptr = tokens;
+			while (*ptr != NULL)
+			{
+				printf("%s\n\n", *ptr);
+				free(*ptr);
+				ptr++;
+			}
+			free(tokens);
+		}
+		str = readline("command : ");
 	}
-	free(tokens);
 	return (0);
 }
