@@ -6,12 +6,11 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 16:41:12 by bena              #+#    #+#             */
-/*   Updated: 2023/07/24 15:52:31 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/24 19:27:30 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <unistd.h>
 
 int			get_number_of_tokens(const char *str, char c);
 char		*get_next_token(const char **str, char c);
