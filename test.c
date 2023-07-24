@@ -8,47 +8,67 @@ int	main(void)
 {
 	char	*str;
 	char	**tokens;
-	char	**ptr;
-	char	***list_of_redirections;
-	char	***list;
+	char	***commands;
+	char	***redirections;
+	char	***ptr;
+	char	**ptr_sub;
 
+	printf("=====================================================\n");
 	str = readline("command : ");
 	while (str != NULL)
 	{
 		add_history(str);
 		replace_white_spaces(str);
-		list_of_redirections = extract_redirections(str);
-		str = remove_redirections(str);
-		tokens = get_tokenized_array(str, '|');
-		//commands <= get_tokenized_array(tokens, ' ');
-		//extend_env_variables(commands, redirections)
-		//remove_quotes(commands, redirections)
-		printf("COMMANDS\n");
-		if (tokens != NULL)
+		if (get_number_of_tokens(str, ' ') < 0)
+			printf("quotation marks are not closed\n");
+		else
 		{
-			ptr = tokens;
-			while (*ptr != NULL)
+			redirections = extract_redirections(str);
+			str = remove_redirections(str);
+			printf("redirection removed : %s\n", str);
+			tokens = get_tokenized_array(str, '|');
+			commands = convert_tokens_to_board(tokens, ' ');
+			remove_tokens(&tokens);
+			//extend_env_variables(commands, redirections)
+			//remove_quotes(commands, redirections)
+			printf("-----------------------------------------------------\n");
+			printf("COMMANDS\n");
+			ptr = commands;
+			if (ptr != NULL)
 			{
-				printf("%s\n\n", *ptr);
-				free(*ptr);
-				ptr++;
-			}
-			free(tokens);
-		}
-		printf("REDIRECTIONS\n");
-		list = list_of_redirections;
-		if (list != NULL)
-		{
-			while (*list != NULL)
-			{
-				ptr = *list;
 				while (*ptr != NULL)
-					printf("%s ", *ptr++);
-				printf("\n");
-				list++;
+				{
+					ptr_sub = *ptr;
+					while (*ptr_sub != NULL)
+					{
+						printf("%s ", *ptr_sub);
+						ptr_sub++;
+					}
+					printf("\n");
+					ptr++;
+				}
 			}
+			remove_board(&commands);
+			printf("\nREDIRECTIONS\n");
+			ptr = redirections;
+			if (ptr != NULL)
+			{
+				while (*ptr != NULL)
+				{
+					ptr_sub = *ptr;
+					while (*ptr_sub != NULL)
+					{
+						printf("%s ", *ptr_sub);
+						ptr_sub++;
+					}
+					printf("\n");
+					ptr++;
+				}
+			}
+			remove_board(&redirections);
 		}
-		remove_list(&list_of_redirections);
+		free(str);
+		printf("=====================================================\n");
 		str = readline("command : ");
 	}
 	return (0);

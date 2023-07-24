@@ -6,7 +6,7 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 15:57:57 by bena              #+#    #+#             */
-/*   Updated: 2023/07/24 11:21:25 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/24 18:15:56 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	get_remaining_string_length(char *str)
 	{
 		if (*brace.ptr == '\'' && brace.in_double_brace == 0)
 			brace.in_brace ^= 1;
-		if (*brace.ptr == '\"' && brace.in_brace == 0)
+		else if (*brace.ptr == '\"' && brace.in_brace == 0)
 			brace.in_double_brace ^= 1;
 		if (brace.in_brace == 0 && brace.in_double_brace == 0)
 			scan_redirection(&brace.on_redirection, &brace.ptr);
@@ -66,7 +66,7 @@ static void	take_remaining_string(char *remain, char *original)
 	{
 		if (*ptr_from == '\'' && brace.in_double_brace == 0)
 			brace.in_brace ^= 1;
-		if (*ptr_from == '\"' && brace.in_brace == 0)
+		else if (*ptr_from == '\"' && brace.in_brace == 0)
 			brace.in_double_brace ^= 1;
 		if (brace.in_brace == 0 && brace.in_double_brace == 0)
 			scan_redirection(&brace.on_redirection, &ptr_from);
@@ -74,6 +74,7 @@ static void	take_remaining_string(char *remain, char *original)
 			*ptr_to++ = *ptr_from;
 		ptr_from++;
 	}
+	*ptr_to = '\0';
 }
 
 static void	scan_redirection(int *flag, char **ptr)
@@ -81,9 +82,11 @@ static void	scan_redirection(int *flag, char **ptr)
 	if (*flag == 1 && **ptr == ' ')
 		*flag = 0;
 	if (*flag == 0 && (**ptr == '<' || **ptr == '>'))
+	{
 		*flag = 1;
-	while (*flag == 1 && (**ptr == '<' || **ptr == '>'))
-		(*ptr)++;
-	while (*flag == 1 && **ptr == ' ')
-		(*ptr)++;
+		while (**ptr == '<' || **ptr == '>')
+			(*ptr)++;
+		while (**ptr == ' ')
+			(*ptr)++;
+	}
 }

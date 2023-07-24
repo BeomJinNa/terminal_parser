@@ -6,7 +6,7 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 11:30:29 by bena              #+#    #+#             */
-/*   Updated: 2023/07/24 14:05:38 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/24 17:51:55 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	dup_redirection(t_brace *brace, char **node)
 	operator = brace->ptr;
 	operator_len = scan_operator(brace);
 	node[0] = NULL;
+	node[1] = NULL;
 	if (operator_len == 0)
 		return ;
 	node[0] = (char *)malloc(sizeof(char) * (operator_len + 1));

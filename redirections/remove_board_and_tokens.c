@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   remove_list.c                                      :+:      :+:    :+:   */
+/*   remove_board_and_tokens.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 12:52:18 by bena              #+#    #+#             */
-/*   Updated: 2023/07/24 14:07:17 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/24 15:42:00 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-void	remove_list(char ****list_ptr)
+void	remove_board(char ****board_ptr)
 {
-	char	***list;
+	char	***board;
 	char	***ptr;
 	char	**ptr_sub;
 
-	if (list_ptr == NULL)
+	if (*board_ptr == NULL)
 		return ;
-	list = *list_ptr;
-	ptr = list;
+	board = *board_ptr;
+	ptr = board;
 	while (*ptr != NULL)
 	{
 		ptr_sub = *ptr;
@@ -29,6 +29,21 @@ void	remove_list(char ****list_ptr)
 			free(*ptr_sub++);
 		free(*ptr++);
 	}
-	free(list);
-	*list_ptr = NULL;
+	free(board);
+	*board_ptr = NULL;
+}
+
+void	remove_tokens(char ***array_ptr)
+{
+	char	**array;
+	char	**ptr;
+
+	if (*array_ptr == NULL)
+		return ;
+	array = *array_ptr;
+	ptr = array;
+	while (*ptr != NULL)
+		free(*ptr++);
+	free(array);
+	*array_ptr = NULL;
 }

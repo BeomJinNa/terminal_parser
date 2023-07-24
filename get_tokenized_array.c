@@ -6,11 +6,12 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 16:41:12 by bena              #+#    #+#             */
-/*   Updated: 2023/07/23 09:00:20 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/24 15:52:31 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <unistd.h>
 
 int			get_number_of_tokens(const char *str, char c);
 char		*get_next_token(const char **str, char c);
@@ -23,8 +24,10 @@ char	**get_tokenized_array(const char *str, char c)
 	char	**output;
 	int		i;
 
+	if (str == NULL)
+		return (NULL);
 	size = get_number_of_tokens(str, c);
-	if (size == 0)
+	if (size < 0)
 		return (NULL);
 	output = (char **)malloc(sizeof(char *) * (size + 1));
 	if (output == NULL)
@@ -53,6 +56,8 @@ int	get_number_of_tokens(const char *str, char c)
 		if (token_size > 0)
 			output++;
 		str += token_size;
+		if (token_size < 0)
+			return (-1);
 	}
 	return (output);
 }
@@ -66,8 +71,6 @@ char	*get_next_token(const char **str, char c)
 	if (str == NULL || *str == NULL)
 		return (NULL);
 	token_size = push_to_the_next_token(str, c);
-	if (token_size == 0)
-		return (NULL);
 	output = (char *)malloc(sizeof(char) * (token_size + 1));
 	if (output == NULL)
 		return (NULL);
@@ -102,6 +105,8 @@ int	push_to_the_next_token(const char **str, char c)
 			break ;
 		ptr++;
 	}
+	if (*ptr == '\0' && (in_brace != 0 || in_double_brace != 0))
+		return (-1);
 	return (ptr - *str);
 }
 

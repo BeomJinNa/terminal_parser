@@ -6,7 +6,7 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 09:39:30 by bena              #+#    #+#             */
-/*   Updated: 2023/07/24 14:08:18 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/24 18:09:35 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #include "brace.h"
 
 void		dup_redirection(t_brace *brace, char **node);
-void		remove_list(char ****list_ptr);
+void		remove_board(char ****board_ptr);
 static int	get_number_of_redirections(char *str);
 static void	scan_redirection(t_brace *brace);
-static void	write_redirections_list(char ****list, char *str);
-static void	copy_node(char **to, char **from);
+static void	write_redirections_board(char ****board, char *str);
+static int	copy_node(char ***node_ptr, char **from);
 
 char	***extract_redirections(char *str)
 {
@@ -31,7 +31,7 @@ char	***extract_redirections(char *str)
 	output = (char ***)malloc(sizeof(char **) * (number_of_redirections + 1));
 	if (output == NULL)
 		return (NULL);
-	write_redirections_list(&output, str);
+	write_redirections_board(&output, str);
 	return (output);
 }
 
@@ -45,7 +45,7 @@ static int	get_number_of_redirections(char *str)
 	{
 		if (*brace.ptr == '\'' && brace.in_double_brace == 0)
 			brace.in_brace ^= 1;
-		if (*brace.ptr == '\"' && brace.in_brace == 0)
+		else if (*brace.ptr == '\"' && brace.in_brace == 0)
 			brace.in_double_brace ^= 1;
 		if (brace.in_brace == 0 && brace.in_double_brace == 0)
 			scan_redirection(&brace);
@@ -63,36 +63,34 @@ static void	scan_redirection(t_brace *brace)
 	{
 		brace->on_redirection = 1;
 		brace->count++;
+		while (*brace->ptr == '<' || *brace->ptr == '>')
+			brace->ptr++;
+		while (*brace->ptr == ' ')
+			brace->ptr++;
 	}
-	while (brace->on_redirection == 1
-		&& (*brace->ptr == '<' || *brace->ptr == '>'))
-		brace->ptr++;
-	while (brace->on_redirection == 1 && *brace->ptr == ' ')
-		brace->ptr++;
 }
 
-static void	write_redirections_list(char ****list, char *str)
+static void	write_redirections_board(char ****board, char *str)
 {
 	char	***ptr;
 	char	*redirection[2];
 	t_brace	brace;
 
-	ptr = *list;
+	ptr = *board;
 	init_brace(&brace, str);
+	redirection[0] = NULL;
 	while (*brace.ptr)
 	{
 		if (*brace.ptr == '\'' && brace.in_double_brace == 0)
 			brace.in_brace ^= 1;
-		if (*brace.ptr == '\"' && brace.in_brace == 0)
+		else if (*brace.ptr == '\"' && brace.in_brace == 0)
 			brace.in_double_brace ^= 1;
 		if (brace.in_brace == 0 && brace.in_double_brace == 0)
 			dup_redirection(&brace, redirection);
 		if (redirection[0] != NULL)
 		{
-			*ptr = (char **)malloc(sizeof(char *) * 3);
-			if (*ptr == NULL)
-				return (remove_list(list));
-			copy_node(*ptr, redirection);
+			if (copy_node(ptr, redirection))
+				return (remove_board(board));
 			ptr++;
 		}
 		brace.ptr++;
@@ -100,9 +98,16 @@ static void	write_redirections_list(char ****list, char *str)
 	*ptr = NULL;
 }
 
-static void	copy_node(char **to, char **from)
+static int	copy_node(char ***node_ptr, char **from)
 {
+	char	**to;
+
+	*node_ptr = (char **)malloc(sizeof(char *) * 3);
+	if (*node_ptr == NULL)
+		return (-1);
+	to = *node_ptr;
 	to[0] = from[0];
 	to[1] = from[1];
 	to[2] = NULL;
+	return (0);
 }
