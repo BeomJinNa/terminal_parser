@@ -6,7 +6,7 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 19:24:24 by bena              #+#    #+#             */
-/*   Updated: 2023/07/25 18:34:15 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/25 20:01:08 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,16 @@ int	main(void)
 		add_history(str);
 		replace_white_spaces(str);
 		if (get_number_of_tokens(str, ' ') < 0)
-			printf("\033[33mquotation marks are not closed\033[0m\n");
+			printf("\033[33mquotation marks are not closed.\033[0m\n");
 		else
 		{
 			redirections = extract_redirections(str);
-			printf("redirections have been extracted\n");
 			if (are_any_syntax_errors_in_redirections(redirections))
 				printf("\033[33msyntax errors exist in redirection.\033[0m\n");
 			else
 			{
 				str = remove_redirections(str);
+				printf("redirection removed : %s\n", str);
 				tokens = get_tokenized_array(str, '|');
 				commands = convert_tokens_to_board(tokens, ' ');
 				remove_tokens(&tokens);
