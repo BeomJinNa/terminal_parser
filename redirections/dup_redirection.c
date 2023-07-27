@@ -6,12 +6,12 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 11:30:29 by bena              #+#    #+#             */
-/*   Updated: 2023/07/25 19:49:55 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/29 17:52:12 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "brace.h"
+#include "../brace.h"
 
 static int	scan_operator(t_brace *brace);
 static int	scan_string(t_brace *brace);

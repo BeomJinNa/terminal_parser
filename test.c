@@ -6,7 +6,7 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 19:24:24 by bena              #+#    #+#             */
-/*   Updated: 2023/07/25 20:01:08 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/29 17:40:40 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "terminal_parser.h"
-#include "hash.h"
 
 static void	print_board(char ***board);
 
@@ -32,7 +31,8 @@ int	main(void)
 	{
 		add_history(str);
 		replace_white_spaces(str);
-		if (get_number_of_tokens(str, ' ') < 0)
+		// 따옴표가 닫히지 않으면 -1 반환
+		if (get_number_of_tokens(str, '\0') < 0)
 			printf("\033[33mquotation marks are not closed.\033[0m\n");
 		else
 		{
@@ -51,7 +51,8 @@ int	main(void)
 					printf("\033[33msyntax errors exist near '{'.\033[0m\n");
 				else
 				{
-					//extend_env_variables(commands, redirections)
+					extend_env_variables(&commands);
+					extend_env_variables(&redirections);
 					remove_quotes(commands);
 					remove_quotes(redirections);
 					printf("-----------------------------------------------------\n");

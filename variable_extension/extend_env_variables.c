@@ -6,24 +6,28 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 12:06:36 by bena              #+#    #+#             */
-/*   Updated: 2023/07/27 14:22:17 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/29 17:47:03 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
 void		remove_board(char ****board_ptr);
+char		**divide_variables(char *str);
+void		replace_variables(char ***tokens_ptr);
+char		*merge_tokens(char **tokens);
+void		remove_tokens(char ***array_ptr);
 static char	*get_extended_string(char *old);
 
-void	extend_env_variables(char ***board)
+void	extend_env_variables(char ****board_ptr)
 {
 	char	***ptr;
 	char	**ptr_sub;
 	char	*str;
 
-	if (board == NULL)
+	if (board_ptr == NULL || *board_ptr == NULL)
 		return ;
-	ptr = board;
+	ptr = *board_ptr;
 	while (*ptr != NULL)
 	{
 		ptr_sub = *ptr;
@@ -31,7 +35,7 @@ void	extend_env_variables(char ***board)
 		{
 			str = get_extended_string(*ptr_sub);
 			if (str == NULL)
-				return (remove_board(&board));
+				return (remove_board(board_ptr));
 			free(*ptr_sub);
 			*ptr_sub = str;
 			ptr_sub++;
@@ -52,5 +56,6 @@ static char	*get_extended_string(char *old)
 	if (tokens == NULL)
 		return (NULL);
 	new = merge_tokens(tokens);
+	remove_tokens(&tokens);
 	return (new);
 }
