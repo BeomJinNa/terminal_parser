@@ -13,6 +13,9 @@ SOURCE =	test.c \
 			variable_extension/are_any_syntax_errors_in_extensions.c \
 			variable_extension/divide_variables.c \
 			variable_extension/extend_env_variables.c \
+			variable_extension/heredoc/are_any_syntax_errors_in_extensions.c \
+			variable_extension/heredoc/divide_variables_heredoc.c \
+			variable_extension/heredoc/extend_one_line_heredoc.c \
 			variable_extension/replace_variables.c \
 			variable_extension/va_strndup.c \
 			variable_extension/variable.c
