@@ -6,20 +6,39 @@
 /*   By: bena <bena@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 12:06:36 by bena              #+#    #+#             */
-/*   Updated: 2023/07/29 17:47:03 by bena             ###   ########.fr       */
+/*   Updated: 2023/07/29 19:03:49 by bena             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-void		remove_board(char ****board_ptr);
 char		**divide_variables(char *str);
 void		replace_variables(char ***tokens_ptr);
 char		*merge_tokens(char **tokens);
 void		remove_tokens(char ***array_ptr);
+void		remove_board(char ****board_ptr);
 static char	*get_extended_string(char *old);
 
-void	extend_env_variables(char ****board_ptr)
+void	extend_env_variables_token(char ***tokens_ptr)
+{
+	char	**ptr;
+	char	*str;
+
+	if (tokens_ptr == NULL)
+		return ;
+	ptr = *tokens_ptr;
+	while (*ptr != NULL)
+	{
+		str = get_extended_string(*ptr);
+		if (str == NULL)
+			return (remove_tokens(tokens_ptr));
+		free(*ptr);
+		*ptr = str;
+		ptr++;
+	}
+}
+
+void	extend_env_variables_board(char ****board_ptr)
 {
 	char	***ptr;
 	char	**ptr_sub;
